@@ -14,6 +14,7 @@ char* ssid_read;
 char* pass_read;
 String ssd_r="";
 String pass_r="";
+int success_write=0;
 
 IPAddress ip(192,168,10,2);
 IPAddress gateway(192,168,10,1);
@@ -33,16 +34,16 @@ void homepage(){
 <form action="/save" method="get">
 <div>
   <label for="ssid"> SSID</label>
-  <input name="ssid" value="" id="ssid" placeholder="SSID" width="50%" height="10%"/>
+  <input name="ssid" value="" id="ssid" placeholder="SSID" style="width:80%;" style="width:20%;" />
 </div>
 
 <div>
   <label for="password">PASSWORD</label>
-  <input name="pass" value="" type="password" id="pass" placeholder="PASSWORD" width="50%" height="10%"/>
+  <input name="pass" value="" type="password" id="pass" placeholder="PASSWORD" style="width:80%;" style="width:20%;" />
 </div>
 
 <div>
-<input type="submit" value="submit" width="50%" height="10%">
+<input type="submit" value="submit" style="width:80%;" style="width:20%;">
 </div>
 
 </form>
@@ -58,6 +59,7 @@ server.send(200,"text/html",page);
 
   void save_page(){
 Serial.println("save data ");
+
 Serial.println(server.arg("ssid"));
 Serial.println(server.arg("pass"));
       //Format File System    
@@ -77,6 +79,7 @@ if (!f1 || !f2){
     f2.print(server.arg("pass"));
     f2.close();
     Serial.println("write to file succesful");
+    success_write=1;
     }
 
     
@@ -86,6 +89,7 @@ char save_page[]=R"RAW(
 </html>
 )RAW";
 server.send(200,"text/html",save_page);
+ESP.restart();
     }
  void WiFi_AP(){
 WiFi.mode(WIFI_AP_STA);
@@ -152,7 +156,7 @@ Serial.println("WiFi.begin("+ssd_r+", "+pass_r+");");
     //}
   //  delay(100);
  // }
-  delay(3000);
+  delay(5000);
   if (WiFi.status() != WL_CONNECTED){
     Serial.println("Wifi connection failed. Set correct AP and Pass");
     WiFi_AP();
